@@ -184,30 +184,35 @@ else:
 
     with col3:
         if st.button("📄 Descargar Informe 📄"):
-            matching_case = df[df["ID"] == int(selected_id)].iloc[0]
-            doc = Document('FORMATO.docx')
-            
-            # Aquí puedes llenar tu documento con los datos del caso
-            doc.add_heading(f'Informe del Caso {selected_id}', level=1)
-            doc.add_paragraph(f'Nombre: {matching_case["Nombre"]}')
-            doc.add_paragraph(f'Género: {matching_case["Género"]}')
-            doc.add_paragraph(f'Cédula: {matching_case["Cédula"]}')
-            doc.add_paragraph(f'Teléfono: {matching_case["Teléfono"]}')
-            doc.add_paragraph(f'Email: {matching_case["Email"]}')
-            doc.add_paragraph(f'Hecho: {matching_case["Hecho"]}')
-            doc.add_paragraph(f'Departamento: {matching_case["Departamento"]}')
-            doc.add_paragraph(f'Municipio: {matching_case["Municipio"]}')
-            doc.add_paragraph(f'Vereda: {matching_case["Vereda"]}')
-            doc.add_paragraph(f'Fecha: {matching_case["Fecha"]}')
-            
-            # Guardar el documento en un buffer de memoria
-            buffer = io.BytesIO()
-            doc.save(buffer)
-            buffer.seek(0)
+            try:
+                matching_case = df[df["ID"] == int(selected_id)].iloc[0]
+                doc = Document('FORMATO.docx')
+                
+                # Aquí puedes llenar tu documento con los datos del caso
+                doc.add_heading(f'Informe del Caso {selected_id}', level=1)
+                doc.add_paragraph(f'Nombre: {matching_case["Nombre"]}')
+                doc.add_paragraph(f'Género: {matching_case["Género"]}')
+                doc.add_paragraph(f'Cédula: {matching_case["Cédula"]}')
+                doc.add_paragraph(f'Teléfono: {matching_case["Teléfono"]}')
+                doc.add_paragraph(f'Email: {matching_case["Email"]}')
+                doc.add_paragraph(f'Hecho: {matching_case["Hecho"]}')
+                doc.add_paragraph(f'Departamento: {matching_case["Departamento"]}')
+                doc.add_paragraph(f'Municipio: {matching_case["Municipio"]}')
+                doc.add_paragraph(f'Vereda: {matching_case["Vereda"]}')
+                doc.add_paragraph(f'Fecha: {matching_case["Fecha"]}')
+                
+                # Guardar el documento en un buffer de memoria
+                buffer = io.BytesIO()
+                doc.save(buffer)
+                buffer.seek(0)
 
-            st.download_button(
-                label="📄 Descargar Informe 📄",
-                data=buffer,
-                file_name=f"{selected_id}_informe.docx",
-                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            )
+                st.download_button(
+                    label="📄 Descargar Informe 📄",
+                    data=buffer,
+                    file_name=f"{selected_id}_informe.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                )
+            except KeyError as e:
+                st.error(f"Error al generar el informe: {e}")
+            except Exception as e:
+                st.error(f"Se produjo un error inesperado: {e}")
