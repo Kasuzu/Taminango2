@@ -6,7 +6,11 @@ import os
 import zipfile
 import io
 from docx import Document
-from docx.shared import Pt
+from docx.shared import Pt, Inches
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
+from PIL import Image
 
 # Cargar los datos
 df = pd.read_csv('denuncias.csv')
@@ -65,6 +69,7 @@ else:
         ax.bar_label(bar, label_type='edge')
     st.pyplot(fig)
     st.markdown("🔍 **Explicación:** Este gráfico muestra la distribución de las denuncias según el género de la persona que realizó la denuncia. Esto ayuda a identificar si hay diferencias significativas entre las denuncias realizadas por diferentes géneros.")
+    
     # Gráfico de distribución de denuncias por municipio
     st.header("🏙️ Distribución de Denuncias por Municipio")
     municipio_counts = df_filtered['Municipio'].value_counts()
@@ -186,7 +191,25 @@ else:
         if st.button("📄 Descargar Informe 📄"):
             try:
                 matching_case = df[df["ID"] == int(selected_id)].iloc[0]
-                doc = Document('FORMATO.docx')
+                doc = Document()
+                
+                # Agregar encabezado
+                header = doc.sections[0].header
+                header_para = header.paragraphs[0]
+                header_run = header_para.add_run()
+                header_run.add_picture('ENCABEZADO.png', width=Inches(6))
+                header_para.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+                
+                # Agregar pie de página
+                footer = doc.sections[0].footer
+                footer_para = footer.paragraphs[0]
+                footer_run = footer_para.add_run()
+                footer_run.add_picture('PIE.png', width=Inches(6))
+                footer_para.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+                
+                # Agregar fondo
+                section = doc.sections[0]
+                section.background_picture = 'FONDOTAM.png'
                 
                 # Aquí puedes llenar tu documento con los datos del caso
                 doc.add_heading(f'Informe del Caso {selected_id}', level=1)
