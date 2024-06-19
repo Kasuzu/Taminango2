@@ -37,7 +37,7 @@ st.sidebar.header("Instrucciones")
 st.sidebar.markdown(st.session_state['selected_tip'], unsafe_allow_html=True)
 
 # Título del formulario con emoji
-st.title("📄 Formulario de Denuncias Penales - Taminango")
+st.title("📄 Formulario Sistema de Gestión de Denuncias y Quejas en el Municipio de Taminango, Nariño")
 
 # Información del denunciante
 st.header("👤 Información del Denunciante")
