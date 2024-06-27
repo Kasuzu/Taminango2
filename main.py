@@ -2,6 +2,11 @@ import streamlit as st
 import base64
 from PIL import Image
 
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
 def main():
     # Cargar las imágenes
     background_image = 'FONDOTAM.png'
@@ -139,7 +144,15 @@ def run_graficos():
 
 def check_password():
     def password_entered():
-        if st.session_state["username"] == "admin" and st.session_state["password"] == "password123":
+        valid_users = {
+            "admin": "password123",
+            "Inspector_Urbano": "1085689365",
+            "Inspector_Rural2": "1085687653",
+            "Inspector_rural1": "1085340615"
+        }
+        username = st.session_state["username"]
+        password = st.session_state["password"]
+        if username in valid_users and valid_users[username] == password:
             st.session_state["authenticated"] = True
         else:
             st.session_state["authenticated"] = False
@@ -156,11 +169,6 @@ def check_password():
         return False
     else:
         return True
-
-def get_base64_of_bin_file(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
 
 if __name__ == "__main__":
     main()
